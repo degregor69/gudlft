@@ -1,6 +1,7 @@
 import json
 from flask import Flask, render_template, request, redirect, flash, url_for, abort
 from datetime import datetime
+from services.purchase_places import check_nb_tickets_limit
 
 app = Flask(__name__)
 app.secret_key = 'something_special'
@@ -46,6 +47,11 @@ def purchase_places():
     competition = [c for c in competitions if c['name'] == request.form['competition']][0]
     club = [c for c in clubs if c['name'] == request.form['club']][0]
     places_required = int(request.form['places'])
+
+    if not check_nb_tickets_limit(places_required):
+        flash("Impossible to book more than 12 tickets")
+        return render_template('welcome.html', club=club, competitions=competitions)
+
     competition['numberOfPlaces'] = int(competition['numberOfPlaces'])-places_required
     flash('Great-booking complete!')
     return render_template('welcome.html', club=club, competitions=competitions)
