@@ -16,4 +16,5 @@ def test_to_book_more_than_12_tickets(client):
         'competition': "Mock Competition",
         'club': 'Mock Club'
     })
-    assert response.status_code == 400
+    soup = BeautifulSoup(response.data, 'html.parser')
+    assert 'Impossible to book more than 12 tickets' in soup.text
