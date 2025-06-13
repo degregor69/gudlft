@@ -9,3 +9,11 @@ def test_show_summary_with_mock_data(client):
     h2 = soup.find('h2')
     assert h2 is not None
     assert "mock@club.com" in h2.text
+
+def test_to_book_more_than_12_tickets(client):
+    response = client.post('/purchasePlaces', data={
+        'places': 13,
+        'competition': "Mock Competition",
+        'club': 'Mock Club'
+    })
+    assert response.status_code == 400
