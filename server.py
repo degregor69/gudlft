@@ -48,9 +48,7 @@ def purchase_places():
     club = [c for c in clubs if c['name'] == request.form['club']][0]
     places_required = int(request.form['places'])
 
-    if not check_nb_tickets_limit(places_required):
-        flash("Impossible to book more than 12 tickets")
-        return render_template('welcome.html', club=club, competitions=competitions)
+    check_nb_tickets_limit(places_required)
 
     competition['numberOfPlaces'] = int(competition['numberOfPlaces'])-places_required
     flash('Great-booking complete!')
