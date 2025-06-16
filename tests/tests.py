@@ -1,4 +1,4 @@
-from .fixtures import client
+from .conftest import client
 from bs4 import BeautifulSoup
 
 def test_show_summary_with_mock_data(client):
