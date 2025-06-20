@@ -58,6 +58,8 @@ def purchase_places():
         return render_template('welcome.html', club=club, competitions=enriched_comps)
 
     competition['numberOfPlaces'] = int(competition['numberOfPlaces']) - places_required
+    club['points'] = str(int(club['points']) - places_required)
+
     flash('Great-booking complete!')
     enriched_comps = enrich_competitions_with_future_flag(competitions)
     return render_template('welcome.html', club=club, competitions=enriched_comps)
