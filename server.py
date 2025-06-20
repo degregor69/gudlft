@@ -6,32 +6,34 @@ from services.show_summary import enrich_competitions_with_future_flag
 app = Flask(__name__)
 app.secret_key = 'something_special'
 
+clubs = []
+competitions = []
+
 
 def load_clubs():
     with open('clubs.json') as c:
         return json.load(c)['clubs']
-
 
 def load_competitions():
     with open('competitions.json') as comps:
         return json.load(comps)['competitions']
 
 
-clubs = load_clubs()
-competitions = load_competitions()
-
+def init_data():
+    global clubs, competitions
+    clubs = load_clubs()
+    competitions = load_competitions()
 
 @app.route('/')
 def index():
     return render_template('index.html')
 
-
 @app.route('/showSummary', methods=['POST'])
 def show_summary():
-    club = [club for club in clubs if club['email'] == request.form['email']][0]
+    club = [club for club in clubs if club['email'] == request.form['email']]
+    club = club[0]
     enriched_comps = enrich_competitions_with_future_flag(competitions)
     return render_template('welcome.html', club=club, competitions=enriched_comps)
-
 
 @app.route('/book/<competition>/<club>')
 def book(competition, club):
@@ -43,8 +45,6 @@ def book(competition, club):
         flash("Something went wrong – please try again.")
         enriched_comps = enrich_competitions_with_future_flag(competitions)
         return render_template('welcome.html', club=club, competitions=enriched_comps)
-
-
 
 @app.route('/purchasePlaces', methods=['POST'])
 def purchase_places():
@@ -62,7 +62,10 @@ def purchase_places():
     enriched_comps = enrich_competitions_with_future_flag(competitions)
     return render_template('welcome.html', club=club, competitions=enriched_comps)
 
-
 @app.route('/logout')
 def logout():
     return redirect(url_for('index'))
+
+if __name__ == '__main__':
+    init_data()
+    app.run()
