@@ -1,5 +1,3 @@
-import pytest
-
 from .conftest import client
 from bs4 import BeautifulSoup
 
