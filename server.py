@@ -1,6 +1,7 @@
 import json
-from flask import Flask, render_template, request, redirect, flash, url_for, abort
-from datetime import datetime
+from flask import Flask, render_template, request, redirect, flash, url_for
+
+from services.services import validate_places_request
 
 app = Flask(__name__)
 app.secret_key = 'something_special'
@@ -36,7 +37,6 @@ def index():
 
 @app.route('/showSummary', methods=['POST'])
 def show_summary():
-    print(clubs)
     club = [club for club in clubs if club['email'] == request.form['email']][0]
     return render_template('welcome.html', club=club, competitions=competitions)
 
@@ -56,6 +56,12 @@ def purchase_places():
     competition = [c for c in competitions if c['name'] == request.form['competition']][0]
     club = [c for c in clubs if c['name'] == request.form['club']][0]
     places_required = int(request.form['places'])
+
+    if not validate_places_request(places_required):
+        flash('You cannot book more than 12 tickets !')
+        return render_template('booking.html', club=club, competition=competition)
+
+
     competition['numberOfPlaces'] = int(competition['numberOfPlaces'])-places_required
     flash('Great-booking complete!')
     return render_template('welcome.html', club=club, competitions=competitions)
