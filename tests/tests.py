@@ -48,3 +48,13 @@ def test_book_competition_in_the_past(client, clubs, competitions):
     assert response.status_code == 200
     soup = BeautifulSoup(response.data, 'html.parser')
     assert "Sorry, the competition is already over. Please try another competition." in soup.text
+
+
+def test_book_competition_in_the_future(client, clubs, competitions):
+    competition_name = quote(competitions[0]["name"])
+    club_name = quote(clubs[0]["name"])
+    response = client.get(f'/book/{competition_name}/{club_name}')
+
+    assert response.status_code == 200
+    soup = BeautifulSoup(response.data, 'html.parser')
+    assert "How many places?" in soup.text
