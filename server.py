@@ -5,20 +5,29 @@ from datetime import datetime
 app = Flask(__name__)
 app.secret_key = 'something_special'
 
+clubs = []
+competitions = []
+
 
 def load_clubs():
     with open('clubs.json') as c:
         return json.load(c)['clubs']
 
-
 def load_competitions():
     with open('competitions.json') as comps:
         return json.load(comps)['competitions']
 
+if not clubs:
+    clubs = load_clubs()
+if not competitions:
+    competitions = load_competitions()
 
-clubs = load_clubs()
-competitions = load_competitions()
 
+def get_clubs():
+    return clubs
+
+def get_competitions():
+    return competitions
 
 @app.route('/')
 def index():
@@ -27,6 +36,7 @@ def index():
 
 @app.route('/showSummary', methods=['POST'])
 def show_summary():
+    print(clubs)
     club = [club for club in clubs if club['email'] == request.form['email']][0]
     return render_template('welcome.html', club=club, competitions=competitions)
 
