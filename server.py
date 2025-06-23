@@ -20,7 +20,7 @@ def load_competitions():
         return json.load(comps)['competitions']
 
 def initialize_data():
-    if os.getenv("FLASK_ENV") == "development":
+    if os.getenv("FLASK_ENV") == "testing":
         return
     global clubs, competitions
     clubs[:] = load_clubs()
