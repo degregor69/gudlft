@@ -3,7 +3,7 @@ import server
 
 
 @pytest.fixture
-def test_clubs(monkeypatch):
+def clubs(monkeypatch):
     test_clubs = [
         {"name": "Test Club", "email": "test@club.com", "points": "30"},
     ]
@@ -11,7 +11,7 @@ def test_clubs(monkeypatch):
     return test_clubs
 
 @pytest.fixture
-def test_competitions(monkeypatch):
+def competitions(monkeypatch):
     test_competitions = [
         {"name": "Test Competition", "date": "2025-12-31 10:00:00", "numberOfPlaces": "25"},
     ]
